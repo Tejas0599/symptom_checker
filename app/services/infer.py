@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import List, Optional, Tuple
 import os
 import joblib
 import numpy as np
@@ -33,16 +33,18 @@ class InferenceService:
             cls._instance = InferenceService()
         return cls._instance
 
-    def predict_conditions(self, text: str, top_k: int = 3) -> List[str]:
+    def predict_with_confidence(self, text: str, top_k: int = 3) -> List[Tuple[str, float]]:
         embedding = self.embedder.embed_texts([text])  # shape (1, d)
         probs = self._predict_proba(embedding)[0]
         top_indices = np.argsort(probs)[::-1][:top_k]
-        return [self.labels[i] for i in top_indices]
+        return [(self.labels[i], float(probs[i])) for i in top_indices]
+
+    def predict_conditions(self, text: str, top_k: int = 3) -> List[str]:
+        return [label for label, _ in self.predict_with_confidence(text, top_k=top_k)]
 
     def _predict_proba(self, embeddings: np.ndarray) -> np.ndarray:
         if hasattr(self.classifier, "predict_proba"):
             return self.classifier.predict_proba(embeddings)
-        # Fallback to decision_function -> softmax
         scores = self.classifier.decision_function(embeddings)
         exp_scores = np.exp(scores - np.max(scores, axis=1, keepdims=True))
         return exp_scores / np.sum(exp_scores, axis=1, keepdims=True)
