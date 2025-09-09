@@ -1,0 +1,17 @@
+{
+  "name": "integration",
+  "version": "1.0.0",
+  "description": "This directory contains all the files needed to integrate your symptom checker with the [Nabhacare Telemedicine](https://github.com/ethancodes-6969/nabhacare-telemedicine.git) system.",
+  "main": "symptom_api_wrapper.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
+  }
+}
