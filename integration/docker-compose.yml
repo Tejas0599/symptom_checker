@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Your Symptom Checker API
+  symptom-checker:
+    build: 
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - MODEL_PATH=/app/models/symptom_disease_model
+    volumes:
+      - ../models:/app/models
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
+
+  # Their Nabhacare Backend (example configuration)
+  nabhacare-backend:
+    image: node:18-alpine
+    working_dir: /app
+    ports:
+      - "3000:3000"
+    environment:
+      - SYMPTOM_CHECKER_API=http://symptom-checker:8000
+      - NODE_ENV=production
+    volumes:
+      - ./nabhacare-backend:/app
+    depends_on:
+      symptom-checker:
+        condition: service_healthy
+    command: npm start
+    restart: unless-stopped
+
+  # Their Frontend (example configuration)
+  nabhacare-frontend:
+    image: node:18-alpine
+    working_dir: /app
+    ports:
+      - "3001:3000"
+    environment:
+      - REACT_APP_API_URL=http://localhost:3000
+    volumes:
+      - ./nabhacare-frontend:/app
+    depends_on:
+      - nabhacare-backend
+    command: npm start
+    restart: unless-stopped
+
+networks:
+  default:
+    name: nabhacare-network
