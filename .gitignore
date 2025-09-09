@@ -16,6 +16,10 @@ ENV/
 # App artifacts
 artifacts/
 
+# Large model files (too big for GitHub)
+models/symptom_disease_model/model.safetensors
+models/symptom_disease_model/training_args.bin
+
 # Notebooks and checkpoints
 .ipynb_checkpoints/
 
