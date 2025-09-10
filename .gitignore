@@ -1,35 +1,19 @@
-# Python
+node_modules/
+*.log
+.DS_Store
+.env
+*.wav
+test_*.wav
+voice_input.wav
 __pycache__/
 *.pyc
-*.pyo
-*.pyd
-*.egg-info/
-
-# Virtual environments
-.venv/
-venv/
-ENV/
-
-# OS files
-.DS_Store
-
-# App artifacts
-artifacts/
-
-# Large model files (too big for GitHub)
-models/symptom_disease_model/model.safetensors
-models/symptom_disease_model/training_args.bin
-
-# Notebooks and checkpoints
-.ipynb_checkpoints/
-
-# Env files
-.env
-
-# Logs
-logs/
-*.log
-
-# Tools
 .pytest_cache/
-.cache/
+.coverage
+dist/
+build/
+*.egg-info/
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
